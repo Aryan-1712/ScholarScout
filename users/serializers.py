@@ -44,7 +44,7 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid email or password.")
         if not user.is_active:
             raise serializers.ValidationError("Account is disabled.")
-        attrs["user"] = user
+        attrs["users"] = user
         return attrs
 
 

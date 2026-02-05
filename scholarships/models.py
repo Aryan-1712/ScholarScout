@@ -68,7 +68,7 @@ class Scholarship(models.Model):
 
 
 class SavedScholarship(models.Model):
-    """Per-user bookmarks — the 'save for later' button on the dashboard."""
+    """Per-users bookmarks — the 'save for later' button on the dashboard."""
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

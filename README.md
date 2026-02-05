@@ -51,7 +51,7 @@ python manage.py migrate
 # 4. Seed the 10 sample scholarships that appear on the dashboard
 python manage.py seed_scholarships
 
-# 5. (Optional) Create a Django admin super-user
+# 5. (Optional) Create a Django admin super-users
 python manage.py createsuperuser
 
 # 6. Start the dev server
@@ -174,7 +174,7 @@ async function handleSubmit() {
       return;
     }
 
-    // Persist token & user for the dashboard
+    // Persist token & users for the dashboard
     sessionStorage.setItem('token',    data.token);
     sessionStorage.setItem('user',     JSON.stringify(data.user));
     window.location.href = 'dashboard.html';

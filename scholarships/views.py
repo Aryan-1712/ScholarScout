@@ -141,7 +141,7 @@ def save_scholarship(request, pk):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def saved_list(request):
-    """All scholarships the current user has bookmarked."""
+    """All scholarships the current users has bookmarked."""
     saved = SavedScholarship.objects.filter(user=request.user).select_related("scholarship")
     serializer = SavedScholarshipSerializer(saved, many=True)
     return Response(serializer.data)

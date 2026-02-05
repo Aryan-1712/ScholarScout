@@ -409,32 +409,73 @@
             : '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle>';
     }
 
-    function handleSubmit() {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+    async function handleSubmit() {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
 
         if (!email || !password) {
-            alert('Please fill in all required fields');
+            alert("Please fill in all required fields");
             return;
         }
 
+        // SIGNUP validations
+        let fullName = "";
         if (!isLogin) {
-            const fullName = document.getElementById('fullName').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            fullName = document.getElementById("fullName").value.trim();
+            const confirmPassword = document.getElementById("confirmPassword").value;
 
             if (!fullName) {
-                alert('Please enter your full name');
+                alert("Please enter your full name");
                 return;
             }
 
             if (password !== confirmPassword) {
-                alert('Passwords do not match!');
+                alert("Passwords do not match!");
                 return;
             }
         }
 
-        console.log('Form submitted:', { email, password });
-        alert(isLogin ? '✅ Login successful!' : '✅ Account created successfully!');
+        // API endpoint
+        const url = isLogin
+            ? "http://127.0.0.1:8000/api/auth/login/"
+            : "http://127.0.0.1:8000/api/auth/signup/";
+
+        // Payload
+        const payload = isLogin
+            ? { email, password }
+            : { email, password, full_name: fullName };
+
+        try {
+            const res = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            // If backend returns error
+            if (!res.ok) {
+                alert(data.error || "Something went wrong");
+                return;
+            }
+
+            // Save token
+            if (data.token) {
+                localStorage.setItem("token", data.token);
+            }
+
+            alert(isLogin ? "✅ Login successful!" : "✅ Account created successfully!");
+
+            // Redirect after success
+            window.location.href = "/dashboard/";
+
+        } catch (err) {
+            console.error(err);
+            alert("Server not reachable. Check if Django is running.");
+        }
     }
 </script>
 </body>
