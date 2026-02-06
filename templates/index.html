@@ -322,149 +322,42 @@
 </div>
 
 <script>
-    let isLogin = true;
-    let showPass = false;
+    document.addEventListener("DOMContentLoaded", function () {
 
-    // Floating icons
-    const icons = [
-        { svg: '<circle cx="12" cy="8" r="6"></circle><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path>', color: 'from-amber-400 to-orange-500', top: '15%', left: '8%' },
-        { svg: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>', color: 'from-emerald-400 to-teal-500', top: '25%', left: '85%' },
-        { svg: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>', color: 'from-cyan-400 to-blue-500', top: '70%', left: '10%' },
-        { svg: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>', color: 'from-yellow-400 to-amber-500', top: '75%', left: '88%' }
-    ];
+        let isLogin = true;
+        let showPass = false;
 
-    const container = document.getElementById('floatingIcons');
-    icons.forEach((icon, i) => {
-        const div = document.createElement('div');
-        div.style.cssText = `position:absolute;top:${icon.top};left:${icon.left};opacity:0.4;animation:float-rotate 8s ease-in-out infinite;animation-delay:${i*0.5}s;transition:transform 0.3s`;
-        div.innerHTML = `<div class="bg-gradient-to-br ${icon.color} p-3 rounded-2xl shadow-2xl"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">${icon.svg}</svg></div>`;
-        container.appendChild(div);
-    });
+        // Floating icons
+        const icons = [
+            { svg: '<circle cx="12" cy="8" r="6"></circle><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path>', color: 'from-amber-400 to-orange-500', top: '15%', left: '8%' },
+            { svg: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>', color: 'from-emerald-400 to-teal-500', top: '25%', left: '85%' },
+            { svg: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>', color: 'from-cyan-400 to-blue-500', top: '70%', left: '10%' },
+            { svg: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>', color: 'from-yellow-400 to-amber-500', top: '75%', left: '88%' }
+        ];
 
-    // Mouse tracking
-    document.addEventListener('mousemove', (e) => {
-        if (Math.random() > 0.95) {
-            const p = document.createElement('div');
-            p.className = 'particle animate-particle-fade';
-            p.style.left = e.clientX + 'px';
-            p.style.top = e.clientY + 'px';
-            document.getElementById('particles').appendChild(p);
-            setTimeout(() => p.remove(), 1000);
-        }
-
-        const floaters = container.children;
-        const cx = window.innerWidth / 2;
-        const cy = window.innerHeight / 2;
-        const ox = (e.clientX - cx) / 50;
-        const oy = (e.clientY - cy) / 50;
-
-        for (let i = 0; i < floaters.length; i++) {
-            floaters[i].style.transform = `translate(${ox * (i + 1)}px, ${oy * (i + 1)}px)`;
-        }
-    });
-
-    function switchTab(toLogin) {
-        isLogin = toLogin;
-        const loginTab = document.getElementById('loginTab');
-        const signupTab = document.getElementById('signupTab');
-
-        if (toLogin) {
-            loginTab.className = 'flex-1 py-4 text-center font-bold transition-all duration-500 relative text-cyan-400 bg-slate-800/80 scale-105';
-            loginTab.innerHTML = '<div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 animate-gradient-x"></div><span class="relative">Login</span>';
-            signupTab.className = 'flex-1 py-4 text-center font-bold transition-all duration-500 relative text-slate-400 hover:text-cyan-300';
-            signupTab.innerHTML = '<span class="relative">Sign Up</span>';
-
-            document.getElementById('fullNameField').classList.add('hidden');
-            document.getElementById('confirmPasswordField').classList.add('hidden');
-            document.getElementById('forgotPassword').classList.remove('hidden');
-            document.getElementById('submitText').textContent = 'Login';
-            document.getElementById('footerText').textContent = "Don't have an account? ";
-            document.getElementById('footerButton').textContent = 'Sign up now!';
-        } else {
-            signupTab.className = 'flex-1 py-4 text-center font-bold transition-all duration-500 relative text-cyan-400 bg-slate-800/80 scale-105';
-            signupTab.innerHTML = '<div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-500 animate-gradient-x"></div><span class="relative">Sign Up</span>';
-            loginTab.className = 'flex-1 py-4 text-center font-bold transition-all duration-500 relative text-slate-400 hover:text-cyan-300';
-            loginTab.innerHTML = '<span class="relative">Login</span>';
-
-            document.getElementById('fullNameField').classList.remove('hidden');
-            document.getElementById('confirmPasswordField').classList.remove('hidden');
-            document.getElementById('forgotPassword').classList.add('hidden');
-            document.getElementById('submitText').textContent = 'Create Account';
-            document.getElementById('footerText').textContent = 'Already have an account? ';
-            document.getElementById('footerButton').textContent = 'Login here!';
-        }
-    }
-
-    function togglePassword() {
-        showPass = !showPass;
-        const passField = document.getElementById('password');
-        const confirmField = document.getElementById('confirmPassword');
-        const icon = document.getElementById('eyeIcon');
-
-        passField.type = showPass ? 'text' : 'password';
-        if (confirmField) confirmField.type = showPass ? 'text' : 'password';
-
-        icon.innerHTML = showPass
-            ? '<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" x2="22" y1="2" y2="22"></line>'
-            : '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle>';
-    }
-
-    async function handleSubmit() {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        if (!email || !password) {
-            alert('Please fill in all required fields');
-            return;
-        }
-
-        let url = 'https://scholarscout.onrender.com/api/auth/login/';
-        let body = { email, password };
-
-        if (!isLogin) {
-            const fullName = document.getElementById('fullName').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (!fullName) {
-                alert('Please enter your full name');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
-                return;
-            }
-
-            url = 'https://scholarscout.onrender.com/api/auth/signup/';
-            body = { name: fullName, email, password };
-        }
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
+        const container = document.getElementById('floatingIcons');
+        if (container) {
+            icons.forEach((icon, i) => {
+                const div = document.createElement('div');
+                div.style.cssText = `position:absolute;top:${icon.top};left:${icon.left};opacity:0.4;animation:float-rotate 8s ease-in-out infinite;animation-delay:${i*0.5}s;transition:transform 0.3s`;
+                div.innerHTML = `<div class="bg-gradient-to-br ${icon.color} p-3 rounded-2xl shadow-2xl"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">${icon.svg}</svg></div>`;
+                container.appendChild(div);
             });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                alert(data.detail || 'Something went wrong');
-                return;
-            }
-
-            alert(isLogin ? '✅ Login successful!' : '✅ Account created successfully!');
-            console.log(data);
-
-        } catch (error) {
-            console.error(error);
-            alert('❌ Server not reachable');
         }
-    }
 
-    }
+        window.switchTab = function (toLogin) {
+        ...
+        };
+
+        window.togglePassword = function () {
+        ...
+        };
+
+        window.handleSubmit = function () {
+        ...
+        };
+
+    });
 </script>
 </body>
 </html>
