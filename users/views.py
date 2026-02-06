@@ -88,3 +88,8 @@ def login(request):
 def logout(request):
     request.user.auth_token.delete()
     return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+
+from django.shortcuts import render
+
+def dashboard(request):
+    return render(request, "dashboard.html")
