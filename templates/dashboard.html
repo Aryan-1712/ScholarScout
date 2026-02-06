@@ -7,126 +7,633 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-        @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
         .animate-float { animation: float-slow 6s ease-in-out infinite; }
-        .animate-shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); background-size: 1000px 100%; animation: shimmer 2s infinite; }
+        .animate-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
         .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
         .animate-slideIn { animation: slideIn 0.3s ease-out; }
-        .scholarship-card { transition: all 0.3s ease; cursor: pointer; }
-        .scholarship-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(34, 211, 238, 0.3); }
-        .bg-grid { background-image: linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px); background-size: 40px 40px; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .scholarship-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .scholarship-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(34, 211, 238, 0.3);
+        }
+
+        .filter-badge {
+            transition: all 0.2s ease;
+        }
+
+        .filter-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .bg-grid {
+            background-image:
+                    linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            font-size: 12px;
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white min-h-screen">
 
-<div id="loginSection" class="flex items-center justify-center min-h-screen z-[100] relative">
-    <div class="bg-slate-800/80 backdrop-blur-xl p-8 rounded-3xl border border-cyan-500/30 w-full max-w-md shadow-2xl">
-        <h2 class="text-3xl font-bold mb-2 text-center text-white">ScholarScout</h2>
-        <p class="text-slate-400 text-center mb-8">Sign in to access your dashboard</p>
-        <input type="email" id="email" placeholder="Email Address" class="w-full p-4 mb-4 bg-slate-900/50 rounded-xl border border-slate-700 outline-none focus:border-cyan-500 text-white">
-        <input type="password" id="pass" placeholder="Password" class="w-full p-4 mb-6 bg-slate-900/50 rounded-xl border border-slate-700 outline-none focus:border-cyan-500 text-white">
-        <button onclick="handleLogin()" class="w-full bg-cyan-500 hover:bg-cyan-400 py-4 rounded-xl font-bold text-white transition-all transform active:scale-95 shadow-lg shadow-cyan-500/20">
-            Sign In
-        </button>
-    </div>
-</div>
-
-<div id="myDashboard" style="display: none;">
-
-    <nav class="bg-slate-800/90 backdrop-blur-2xl border-b border-cyan-500/30 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-3">
-                    <div class="bg-gradient-to-br from-cyan-400 to-blue-500 p-2 rounded-xl">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
-                    </div>
-                    <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">ScholarScout</h1>
+<!-- Navigation Bar -->
+<nav class="bg-slate-800/90 backdrop-blur-2xl border-b border-cyan-500/30 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-br from-cyan-400 to-blue-500 p-2 rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-3 pl-3 border-l border-slate-700">
-                        <div class="text-right hidden sm:block">
-                            <p class="text-sm font-semibold text-white">John Doe</p>
-                            <p class="text-xs text-slate-400">Student</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center font-bold">JD</div>
+                <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                    ScholarScout
+                </h1>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 rounded-lg hover:bg-slate-700 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+                        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+                    </svg>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+
+                <div class="flex items-center gap-3 pl-3 border-l border-slate-700">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-semibold text-white">John Doe</p>
+                        <p class="text-xs text-slate-400">Student</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center font-bold">
+                        JD
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
-
-    <div class="flex min-h-screen bg-grid">
-        <aside id="sidebar" class="w-80 bg-slate-800/50 backdrop-blur-xl border-r border-cyan-500/30 p-6 overflow-y-auto scrollbar-hide">
-            <div class="space-y-6">
-                <div>
-                    <label class="text-sm font-semibold text-cyan-300 mb-2 block">Search</label>
-                    <input type="text" id="searchInput" onkeyup="filterScholarships()" placeholder="Search..." class="w-full px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-xl outline-none focus:border-cyan-400">
-                </div>
-                <button onclick="resetFilters()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold transition-all">Reset Filters</button>
-            </div>
-        </aside>
-
-        <main class="flex-1 p-6 overflow-y-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-cyan-500/20 border border-cyan-500/30 rounded-2xl p-5">
-                    <p class="text-sm text-cyan-300">Total Scholarships</p>
-                    <p id="totalCount" class="text-3xl font-bold">10</p>
-                </div>
-            </div>
-            <div id="scholarshipsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div id="noResults" class="hidden text-center py-20 text-slate-400">No scholarships found</div>
-        </main>
     </div>
-</div> <div id="scholarshipModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="closeModal()">
-    <div class="bg-slate-800 rounded-3xl max-w-3xl w-full p-8 border border-cyan-500/30" onclick="event.stopPropagation()">
-        <div id="modalContent"></div>
+</nav>
+
+<div class="flex min-h-screen bg-grid">
+
+    <!-- Sidebar Filters -->
+    <aside id="sidebar" class="w-80 bg-slate-800/50 backdrop-blur-xl border-r border-cyan-500/30 p-6 overflow-y-auto scrollbar-hide animate-slideIn">
+        <div class="space-y-6">
+
+            <!-- Search Box -->
+            <div>
+                <label class="text-sm font-semibold text-cyan-300 mb-2 block">Search Scholarships</label>
+                <div class="relative">
+                    <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search by name..."
+                            class="w-full px-4 py-3 pl-10 bg-slate-900/50 border-2 border-slate-600 text-white rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all outline-none placeholder-slate-500"
+                            onkeyup="filterScholarships()"
+                    >
+                    <svg class="absolute left-3 top-3.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Amount Range -->
+            <div>
+                <label class="text-sm font-semibold text-cyan-300 mb-3 block flex items-center justify-between">
+                    Award Amount
+                    <span id="amountDisplay" class="text-xs text-slate-400">$0 - $50,000+</span>
+                </label>
+                <input
+                        type="range"
+                        id="amountRange"
+                        min="0"
+                        max="50000"
+                        step="1000"
+                        value="50000"
+                        class="w-full accent-cyan-500"
+                        oninput="updateAmountDisplay(); filterScholarships()"
+                >
+                <div class="flex justify-between text-xs text-slate-500 mt-1">
+                    <span>$0</span>
+                    <span>$50k+</span>
+                </div>
+            </div>
+
+            <!-- Field of Study -->
+            <div>
+                <label class="text-sm font-semibold text-cyan-300 mb-3 block">Field of Study</label>
+                <select
+                        id="fieldFilter"
+                        class="w-full px-4 py-3 bg-slate-900/50 border-2 border-slate-600 text-white rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all outline-none"
+                        onchange="filterScholarships()"
+                >
+                    <option value="">All Fields</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Business">Business</option>
+                    <option value="Medicine">Medicine</option>
+                    <option value="Arts">Arts & Humanities</option>
+                    <option value="Science">Science</option>
+                    <option value="Law">Law</option>
+                    <option value="Education">Education</option>
+                </select>
+            </div>
+
+            <!-- GPA Requirement -->
+            <div>
+                <label class="text-sm font-semibold text-cyan-300 mb-3 block flex items-center justify-between">
+                    Minimum GPA
+                    <span id="gpaDisplay" class="text-xs text-slate-400">Any</span>
+                </label>
+                <input
+                        type="range"
+                        id="gpaRange"
+                        min="0"
+                        max="4.0"
+                        step="0.1"
+                        value="0"
+                        class="w-full accent-cyan-500"
+                        oninput="updateGPADisplay(); filterScholarships()"
+                >
+                <div class="flex justify-between text-xs text-slate-500 mt-1">
+                    <span>0.0</span>
+                    <span>4.0</span>
+                </div>
+            </div>
+
+            <!-- Scholarship Type -->
+            <div>
+                <label class="text-sm font-semibold text-cyan-300 mb-3 block">Scholarship Type</label>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" value="Merit-Based" class="w-4 h-4 accent-cyan-500" onchange="filterScholarships()">
+                        <span class="text-sm text-slate-300 group-hover:text-cyan-300 transition-colors">Merit-Based</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" value="Need-Based" class="w-4 h-4 accent-cyan-500" onchange="filterScholarships()">
+                        <span class="text-sm text-slate-300 group-hover:text-cyan-300 transition-colors">Need-Based</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" value="Athletic" class="w-4 h-4 accent-cyan-500" onchange="filterScholarships()">
+                        <span class="text-sm text-slate-300 group-hover:text-cyan-300 transition-colors">Athletic</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" value="Diversity" class="w-4 h-4 accent-cyan-500" onchange="filterScholarships()">
+                        <span class="text-sm text-slate-300 group-hover:text-cyan-300 transition-colors">Diversity & Inclusion</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Eligibility -->
+            <div>
+                <label class="text-sm font-semibold text-cyan-300 mb-3 block">Student Status</label>
+                <select
+                        id="statusFilter"
+                        class="w-full px-4 py-3 bg-slate-900/50 border-2 border-slate-600 text-white rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all outline-none"
+                        onchange="filterScholarships()"
+                >
+                    <option value="">All Students</option>
+                    <option value="Undergraduate">Undergraduate</option>
+                    <option value="Graduate">Graduate</option>
+                    <option value="High School">High School</option>
+                </select>
+            </div>
+
+            <!-- Deadline -->
+            <div>
+                <label class="text-sm font-semibold text-cyan-300 mb-3 block">Application Deadline</label>
+                <select
+                        id="deadlineFilter"
+                        class="w-full px-4 py-3 bg-slate-900/50 border-2 border-slate-600 text-white rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all outline-none"
+                        onchange="filterScholarships()"
+                >
+                    <option value="">Any Time</option>
+                    <option value="30">Next 30 Days</option>
+                    <option value="60">Next 60 Days</option>
+                    <option value="90">Next 90 Days</option>
+                </select>
+            </div>
+
+            <!-- Reset Button -->
+            <button
+                    onclick="resetFilters()"
+                    class="w-full py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-semibold transition-all transform hover:scale-105 active:scale-95"
+            >
+                Reset All Filters
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-5 animate-fadeIn">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-cyan-300 font-semibold">Total Scholarships</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                </div>
+                <p id="totalCount" class="text-3xl font-bold text-white">24</p>
+                <p class="text-xs text-slate-400 mt-1">Available opportunities</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl border border-green-500/30 rounded-2xl p-5 animate-fadeIn" style="animation-delay: 0.1s">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-green-300 font-semibold">Total Awards</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+                        <line x1="12" x2="12" y1="2" y2="22"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <p id="totalAwards" class="text-3xl font-bold text-white">$458K</p>
+                <p class="text-xs text-slate-400 mt-1">Combined value</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-5 animate-fadeIn" style="animation-delay: 0.2s">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-purple-300 font-semibold">Matched</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-purple-400">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                </div>
+                <p id="matchedCount" class="text-3xl font-bold text-white">12</p>
+                <p class="text-xs text-slate-400 mt-1">Personalized for you</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-orange-500/20 to-amber-500/20 backdrop-blur-xl border border-orange-500/30 rounded-2xl p-5 animate-fadeIn" style="animation-delay: 0.3s">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-orange-300 font-semibold">Deadlines Soon</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-orange-400">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <p id="urgentCount" class="text-3xl font-bold text-white">5</p>
+                <p class="text-xs text-slate-400 mt-1">Apply within 30 days</p>
+            </div>
+        </div>
+
+        <!-- View Toggle & Sort -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold">Available Scholarships</h2>
+                <span id="resultCount" class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm font-semibold">24 results</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <select
+                        id="sortFilter"
+                        class="px-4 py-2 bg-slate-800/50 border border-slate-600 text-white rounded-xl focus:ring-2 focus:ring-cyan-500/50 outline-none text-sm"
+                        onchange="sortScholarships()"
+                >
+                    <option value="relevant">Most Relevant</option>
+                    <option value="amount-high">Highest Amount</option>
+                    <option value="amount-low">Lowest Amount</option>
+                    <option value="deadline">Deadline (Soonest)</option>
+                </select>
+
+                <div class="flex gap-2 border border-slate-600 rounded-xl p-1">
+                    <button onclick="setView('grid')" id="gridBtn" class="px-3 py-1 bg-cyan-500 text-white rounded-lg text-sm font-semibold transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+                            <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+                            <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+                            <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+                        </svg>
+                    </button>
+                    <button onclick="setView('list')" id="listBtn" class="px-3 py-1 text-slate-400 hover:text-white rounded-lg text-sm transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" x2="21" y1="6" y2="6"></line>
+                            <line x1="8" x2="21" y1="12" y2="12"></line>
+                            <line x1="8" x2="21" y1="18" y2="18"></line>
+                            <line x1="3" x2="3.01" y1="6" y2="6"></line>
+                            <line x1="3" x2="3.01" y1="12" y2="12"></line>
+                            <line x1="3" x2="3.01" y1="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scholarships Grid -->
+        <div id="scholarshipsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Scholarships will be rendered here by JavaScript -->
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="hidden text-center py-20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto text-slate-600 mb-4">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <h3 class="text-xl font-bold text-slate-400 mb-2">No scholarships found</h3>
+            <p class="text-slate-500">Try adjusting your filters to see more results</p>
+        </div>
+    </main>
+</div>
+
+<!-- Scholarship Modal -->
+<div id="scholarshipModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
+    <div class="bg-slate-800 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-cyan-500/30 shadow-2xl animate-fadeIn" onclick="event.stopPropagation()">
+        <div id="modalContent">
+            <!-- Modal content will be populated by JavaScript -->
+        </div>
     </div>
 </div>
 
 <script>
+    // Sample scholarship data
     const scholarships = [
-        { id: 1, name: "Gates Millennium Scholars", amount: 50000, organization: "Gates Foundation", deadline: "2026-03-15", field: "All Fields" },
-        { id: 2, name: "Google Engineering Scholarship", amount: 10000, organization: "Google LLC", deadline: "2026-04-20", field: "Computer Science" }
+        {
+            id: 1,
+            name: "Gates Millennium Scholars Program",
+            amount: 50000,
+            organization: "Bill & Melinda Gates Foundation",
+            deadline: "2026-03-15",
+            field: "All Fields",
+            type: "Merit-Based",
+            gpa: 3.3,
+            status: "Undergraduate",
+            description: "A highly selective scholarship for outstanding minority students with significant financial need.",
+            eligibility: ["U.S. Citizen or Legal Permanent Resident", "Pell Grant eligible", "Minimum 3.3 GPA", "Planning to enroll full-time"],
+            benefits: ["Full tuition coverage", "Room and board", "Books and supplies", "Mentorship program"],
+            applicationUrl: "#"
+        },
+        {
+            id: 2,
+            name: "National Merit Scholarship",
+            amount: 25000,
+            organization: "National Merit Scholarship Corporation",
+            deadline: "2026-02-28",
+            field: "All Fields",
+            type: "Merit-Based",
+            gpa: 3.5,
+            status: "High School",
+            description: "Awarded to high school students based on PSAT/NMSQT scores and academic achievement.",
+            eligibility: ["High PSAT scores", "U.S. Citizen", "Minimum 3.5 GPA", "Full-time enrollment"],
+            benefits: ["$2,500 one-time award", "Renewable options available", "Recognition certificate"],
+            applicationUrl: "#"
+        },
+        {
+            id: 3,
+            name: "Google Engineering Scholarship",
+            amount: 10000,
+            organization: "Google LLC",
+            deadline: "2026-04-20",
+            field: "Computer Science",
+            type: "Merit-Based",
+            gpa: 3.0,
+            status: "Undergraduate",
+            description: "Supporting students pursuing computer science and engineering degrees with a passion for technology.",
+            eligibility: ["Computer Science or related major", "Demonstrated leadership", "Minimum 3.0 GPA"],
+            benefits: ["$10,000 award", "Google internship opportunity", "Tech community access"],
+            applicationUrl: "#"
+        },
+        {
+            id: 4,
+            name: "Coca-Cola Scholars Program",
+            amount: 20000,
+            organization: "The Coca-Cola Company",
+            deadline: "2026-02-10",
+            field: "All Fields",
+            type: "Merit-Based",
+            gpa: 3.0,
+            status: "High School",
+            description: "Recognizing and celebrating high-achieving high school seniors who are making a difference in their communities.",
+            eligibility: ["High school senior", "Minimum 3.0 GPA", "U.S. Citizen or permanent resident", "Community service"],
+            benefits: ["$20,000 scholarship", "Leadership development", "Scholars summit attendance"],
+            applicationUrl: "#"
+        },
+        {
+            id: 5,
+            name: "Dell Scholars Program",
+            amount: 20000,
+            organization: "Michael & Susan Dell Foundation",
+            deadline: "2026-03-01",
+            field: "All Fields",
+            type: "Need-Based",
+            gpa: 2.4,
+            status: "High School",
+            description: "Supporting students who have overcome significant obstacles and demonstrate grit and potential.",
+            eligibility: ["Participate in approved college readiness program", "Minimum 2.4 GPA", "Pell-eligible", "Planned college enrollment"],
+            benefits: ["$20,000 scholarship", "Dell laptop", "Textbook credits", "Ongoing support"],
+            applicationUrl: "#"
+        },
+        {
+            id: 6,
+            name: "Jack Kent Cooke Foundation Scholarship",
+            amount: 40000,
+            organization: "Jack Kent Cooke Foundation",
+            deadline: "2026-04-15",
+            field: "All Fields",
+            type: "Merit-Based",
+            gpa: 3.5,
+            status: "Undergraduate",
+            description: "Nation's largest private scholarship for high-achieving students with financial need.",
+            eligibility: ["Exceptional academic ability", "Financial need", "Minimum 3.5 GPA", "U.S. Citizen or permanent resident"],
+            benefits: ["Up to $40,000 per year", "Educational advising", "Funded internships", "Networking opportunities"],
+            applicationUrl: "#"
+        },
+        {
+            id: 7,
+            name: "STEM Excellence Award",
+            amount: 15000,
+            organization: "National STEM Foundation",
+            deadline: "2026-05-30",
+            field: "Science",
+            type: "Merit-Based",
+            gpa: 3.2,
+            status: "Undergraduate",
+            description: "Supporting the next generation of STEM leaders and innovators.",
+            eligibility: ["STEM major", "Demonstrated research experience", "Minimum 3.2 GPA"],
+            benefits: ["$15,000 award", "Research mentorship", "Conference attendance"],
+            applicationUrl: "#"
+        },
+        {
+            id: 8,
+            name: "Hispanic Scholarship Fund",
+            amount: 5000,
+            organization: "Hispanic Scholarship Fund",
+            deadline: "2026-03-30",
+            field: "All Fields",
+            type: "Diversity",
+            gpa: 3.0,
+            status: "Undergraduate",
+            description: "Supporting Hispanic American students in achieving their higher education goals.",
+            eligibility: ["Hispanic heritage", "Minimum 3.0 GPA", "U.S. Citizen or permanent resident", "Enrolled in accredited institution"],
+            benefits: ["$500 - $5,000 award", "Scholar services", "Career development"],
+            applicationUrl: "#"
+        },
+        {
+            id: 9,
+            name: "Women in Engineering Scholarship",
+            amount: 12000,
+            organization: "Society of Women Engineers",
+            deadline: "2026-02-15",
+            field: "Engineering",
+            type: "Diversity",
+            gpa: 3.0,
+            status: "Undergraduate",
+            description: "Empowering women to achieve their full potential in engineering careers.",
+            eligibility: ["Female student", "Engineering major", "Minimum 3.0 GPA", "SWE membership (can apply simultaneously)"],
+            benefits: ["$12,000 scholarship", "Professional development", "Networking events"],
+            applicationUrl: "#"
+        },
+        {
+            id: 10,
+            name: "Future Business Leaders Scholarship",
+            amount: 8000,
+            organization: "American Business Association",
+            deadline: "2026-06-01",
+            field: "Business",
+            type: "Merit-Based",
+            gpa: 3.3,
+            status: "Undergraduate",
+            description: "Investing in tomorrow's business innovators and entrepreneurs.",
+            eligibility: ["Business major", "Leadership experience", "Minimum 3.3 GPA"],
+            benefits: ["$8,000 award", "Mentorship program", "Industry connections"],
+            applicationUrl: "#"
+        }
     ];
 
-    function handleLogin() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        if (email && pass) {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('myDashboard').style.display = 'block';
-            init();
+    let currentView = 'grid';
+    let filteredScholarships = [...scholarships];
+
+    // Initialize
+    function init() {
+        renderScholarships();
+        updateStats();
+    }
+
+    // Render scholarships
+    function renderScholarships() {
+        const container = document.getElementById('scholarshipsContainer');
+        const noResults = document.getElementById('noResults');
+
+        if (filteredScholarships.length === 0) {
+            container.classList.add('hidden');
+            noResults.classList.remove('hidden');
+            return;
+        }
+
+        container.classList.remove('hidden');
+        noResults.classList.add('hidden');
+
+        if (currentView === 'grid') {
+            container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+            container.innerHTML = filteredScholarships.map(scholarship => createScholarshipCard(scholarship)).join('');
         } else {
-            alert("Please enter credentials");
+            container.className = 'space-y-4';
+            container.innerHTML = filteredScholarships.map(scholarship => createScholarshipListItem(scholarship)).join('');
         }
     }
 
-    function init() {
-        renderScholarships();
-    }
+    // Create scholarship card (grid view)
+    function createScholarshipCard(s) {
+        const daysUntilDeadline = Math.ceil((new Date(s.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+        const isUrgent = daysUntilDeadline <= 30;
 
-    function renderScholarships() {
-        const container = document.getElementById('scholarshipsContainer');
-        container.innerHTML = scholarships.map(s => `
-            <div class="scholarship-card bg-slate-800/50 border border-slate-600 rounded-2xl p-6">
-                <h3 class="font-bold text-xl mb-2">${s.name}</h3>
-                <p class="text-cyan-400">$${s.amount.toLocaleString()}</p>
-                <p class="text-sm text-slate-400 mt-2">${s.organization}</p>
-            </div>
-        `).join('');
-    }
+        return `
+<div class="scholarship-card bg-slate-800/50 backdrop-blur-xl border border-slate-600 rounded-2xl p-6 animate-fadeIn" onclick="openModal(${s.id})">
+<div class="flex items-start justify-between mb-4">
+<div class="flex-1">
+<h3 class="text-lg font-bold text-white mb-2 line-clamp-2">${s.name}</h3>
+<p class="text-sm text-cyan-400 font-semibold">${s.organization}</p>
+</div>
+${isUrgent ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs font-bold rounded-lg">URGENT</span>' : ''}
+</div>
 
-    function filterScholarships() { /* Add your filter logic here */ }
-    function resetFilters() { document.getElementById('searchInput').value = ''; renderScholarships(); }
-    function closeModal() { document.getElementById('scholarshipModal').classList.add('hidden'); }
-</script>
-</body>
-</html>
+<div class="mb-4 space-y-2">
+<div class="flex items-center gap-2 text-sm">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+<line x1="12" x2="12" y1="2" y2="22"></line>
+<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+</svg>
+<span class="text-white font-bold">${s.amount.toLocaleString()}</span>
+</div>
+
+<div class="flex items-center gap-2 text-sm">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-orange-400">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span class="text-slate-300">Deadline: ${new Date(s.deadline).toLocaleDateString()}</span>
+</div>
+
+<div class="flex items-center gap-2 text-sm">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-purple-400">
+<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+<circle cx="9" cy="7" r="4"></circle>
+<path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+<span class="text-slate-300">${s.status}</span>
+</div>
+</div>
+
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 text-xs font-semibol
